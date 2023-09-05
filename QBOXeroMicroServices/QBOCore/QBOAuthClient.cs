@@ -1,5 +1,8 @@
 ﻿using BusinessAccessLayer.Common;
+using Intuit.Ipp.Core;
+using Intuit.Ipp.Data;
 using Intuit.Ipp.OAuth2PlatformClient;
+using Intuit.Ipp.QueryFilter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +28,47 @@ namespace QBOCore
             authorizationUrl.AppendFormat("&state={0}", companyId);
 
             return authorizationUrl.ToString();
+        }
+
+        public static TokenResponse GetBearerTokenAsync(string code)
+        {
+            try
+            {
+                var tokenResp = auth2Client.GetBearerTokenAsync(code).Result;
+                return tokenResp;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public static ServiceContext Service(string realmId, string accessToken)
+        {
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+            var oauthValidator = new Intuit.Ipp.Security.OAuth2RequestValidator(accessToken);
+            ServiceContext serviceContext = new ServiceContext(realmId, IntuitServicesType.QBO, oauthValidator);
+            serviceContext.IppConfiguration.BaseUrl.Qbo = AppConfiguration.QBOBaseUrl;
+            return serviceContext;
+        }
+
+        public static CompanyInfo QuickBookCompanyInfo(string realmId, string accessToken)
+        {
+            var serviceContext = Service(realmId, accessToken);
+            var quickBooksCompanyInfo = new QueryService<CompanyInfo>(serviceContext).ExecuteIdsQuery("SELECT * FROM CompanyInfo", QueryOperationType.query).FirstOrDefault();
+            return quickBooksCompanyInfo;
+        }
+
+        public static void RevokeToken(string refreshToken)
+        {
+            try
+            {
+                var objRefreshToken = auth2Client.RevokeTokenAsync(refreshToken).Result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

@@ -30,8 +30,8 @@ namespace BusinessAccessLayer.Common
             var appSetting = root.GetSection("ApplicationSettings");
             HostEnvironment = root.GetSection("HostEnvironment").Value;
 
-            ConnectionString = root.GetSection("DatabaseSettings").GetSection(HostEnvironment).Value;
-            DatabaseName = root.GetSection("DatabaseSettings").GetSection(DatabaseName).Value;
+            ConnectionString = root.GetSection("DatabaseSettings").GetSection(HostEnvironment).GetSection("ConnectionString").Value;
+            DatabaseName = root.GetSection("DatabaseSettings").GetSection(HostEnvironment).GetSection("DatabaseName").Value;
 
             QBOClientID = root.GetSection("QBOConfig").GetSection(HostEnvironment).GetSection("QBOClientID").Value;
             QBOClientSecret = root.GetSection("QBOConfig").GetSection(HostEnvironment).GetSection("QBOClientSecret").Value;

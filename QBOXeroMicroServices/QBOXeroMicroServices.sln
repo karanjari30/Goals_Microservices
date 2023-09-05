@@ -3,7 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QBOXeroMicroServices", "QBOXeroMicroServices\QBOXeroMicroServices.csproj", "{F56CBFCF-5F8F-4D7C-B5DA-545354A7A3DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QBOXeroMicroServices", "QBOXeroMicroServices\QBOXeroMicroServices.csproj", "{F56CBFCF-5F8F-4D7C-B5DA-545354A7A3DA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MicroServices", "MicroServices", "{ADCE9E8B-8C6A-49D6-AB85-C36321C7F5FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessAccessLayer", "BusinessAccessLayer\BusinessAccessLayer.csproj", "{EA98D62F-EFCA-4D0C-9D12-E45557058BDC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QBOCore", "QBOCore\QBOCore.csproj", "{31282D39-CF71-4963-BEDA-A22A9C2590B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{6BAD2328-5522-4EC8-85D4-157C766AF51D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +23,18 @@ Global
 		{F56CBFCF-5F8F-4D7C-B5DA-545354A7A3DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F56CBFCF-5F8F-4D7C-B5DA-545354A7A3DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F56CBFCF-5F8F-4D7C-B5DA-545354A7A3DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA98D62F-EFCA-4D0C-9D12-E45557058BDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA98D62F-EFCA-4D0C-9D12-E45557058BDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA98D62F-EFCA-4D0C-9D12-E45557058BDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA98D62F-EFCA-4D0C-9D12-E45557058BDC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31282D39-CF71-4963-BEDA-A22A9C2590B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31282D39-CF71-4963-BEDA-A22A9C2590B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31282D39-CF71-4963-BEDA-A22A9C2590B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31282D39-CF71-4963-BEDA-A22A9C2590B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BAD2328-5522-4EC8-85D4-157C766AF51D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BAD2328-5522-4EC8-85D4-157C766AF51D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BAD2328-5522-4EC8-85D4-157C766AF51D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BAD2328-5522-4EC8-85D4-157C766AF51D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

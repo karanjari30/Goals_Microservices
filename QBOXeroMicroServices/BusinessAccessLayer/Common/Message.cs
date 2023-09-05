@@ -13,6 +13,8 @@ namespace BusinessAccessLayer.Common
         public const string OrganizationFoundMessage = "Connection found";
         public const string OrganizationDisconnectMessage = "QuickBooks disconnect successfully";
         public const string OrganizationAlreadyDisconnectMessage = "QuickBooks company already disconnected";
+        public const string QuickBookCompanyConnected = "QuickBooks company connected";
+        public const string QuickBookCompanyAlreadyConnected = "QuickBooks company already connected";
 
         public const string FetchRecords = "Records fetched Successfully";
         public const string UnAuthorizedUser = "UnAuthorized User";

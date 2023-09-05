@@ -7,8 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetOpenAuth.AspNet" Version="4.3.4.13329" />
-    <PackageReference Include="IppDotNetSdkForQuickBooksApiV3" Version="14.6.3.6" />
+    <PackageReference Include="MongoDB.Driver" Version="2.21.0" />
   </ItemGroup>
 
   <ItemGroup>
