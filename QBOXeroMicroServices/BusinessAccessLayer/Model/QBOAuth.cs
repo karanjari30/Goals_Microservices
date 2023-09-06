@@ -14,7 +14,7 @@ namespace BusinessAccessLayer.Model
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
-        public Guid AccountingCompanyId { get; set; }
+        public string AccountingCompanyId { get; set; }
         public string ERPCompanyId { get; set; }
         public string ERPCompanyName { get; set; }
         public string? AccessToken { get; set; }

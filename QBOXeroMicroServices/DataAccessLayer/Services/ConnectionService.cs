@@ -18,7 +18,7 @@ namespace DataAccessLayer.Services
             _qBOAuth = database.GetCollection<QBOAuth>("QBOAuth");
         }
 
-        public async Task<QBOAuth> GetQBOAuthConfigureByCompanyId(Guid accountingCompanyId)
+        public async Task<QBOAuth> GetQBOAuthConfigureByCompanyId(string accountingCompanyId)
         {
             var qboAuthConfigure = await _qBOAuth.FindAsync(x => x.AccountingCompanyId == accountingCompanyId);
             return qboAuthConfigure.FirstOrDefault();

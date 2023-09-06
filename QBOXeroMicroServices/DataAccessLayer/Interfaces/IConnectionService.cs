@@ -9,7 +9,7 @@ namespace DataAccessLayer.Interfaces
 {
     public interface IConnectionService
     {
-        Task<QBOAuth> GetQBOAuthConfigureByCompanyId(Guid accountingCompanyId);
+        Task<QBOAuth> GetQBOAuthConfigureByCompanyId(string accountingCompanyId);
         Task<QBOAuth> GetQuickBooksConnectionByRealmId(string realmId);
         void InsertOrUpdateAuthDetails(QBOAuth qBOAuth);
         void DisconnectQuickBookCompany(QBOAuth qBOAuth);

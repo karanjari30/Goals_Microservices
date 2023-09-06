@@ -35,7 +35,7 @@ namespace QBOXeroMicroServices.Controllers
                 }
                 else
                 {
-                    var getConnectionData = await _connectionService.GetQBOAuthConfigureByCompanyId(companyId);
+                    var getConnectionData = await _connectionService.GetQBOAuthConfigureByCompanyId(companyId.ToString());
                     if(getConnectionData == null)
                     {
                         objResponse.ResponseStatus = ResponseStatus.Error;
@@ -79,14 +79,14 @@ namespace QBOXeroMicroServices.Controllers
                 if (tokenResponse != null && !string.IsNullOrEmpty(tokenResponse.AccessToken))
                 {
                     var qboCompanyInfo = QBOAuthClient.QuickBookCompanyInfo(realmId, tokenResponse.AccessToken);
-                    var quickBooksConnection = await _connectionService.GetQBOAuthConfigureByCompanyId(state);
+                    var quickBooksConnection = await _connectionService.GetQBOAuthConfigureByCompanyId(state.ToString());
                     if (quickBooksConnection != null)
                     {
-                        if (quickBooksConnection.AccountingCompanyId == state && quickBooksConnection.ERPCompanyId == realmId)
+                        if (quickBooksConnection.AccountingCompanyId == state.ToString() && quickBooksConnection.ERPCompanyId == realmId)
                         {
                             QBOAuth qBOAuth = new QBOAuth()
                             {
-                                AccountingCompanyId = state,
+                                AccountingCompanyId = state.ToString(),
                                 ERPCompanyName = qboCompanyInfo.CompanyName,
                                 ERPCompanyId = realmId,
                                 AccessToken = tokenResponse.AccessToken,
@@ -114,7 +114,7 @@ namespace QBOXeroMicroServices.Controllers
                             //await _connectionsServices.CreateUpdateConnection(realmId, state, qboCompanyInfo.CompanyName, tokenResponse);
                             QBOAuth qBOAuth = new QBOAuth()
                             {
-                                AccountingCompanyId = state,
+                                AccountingCompanyId = state.ToString(),
                                 ERPCompanyName = qboCompanyInfo.CompanyName,
                                 ERPCompanyId = realmId,
                                 AccessToken = tokenResponse.AccessToken,
@@ -146,7 +146,7 @@ namespace QBOXeroMicroServices.Controllers
             var objResponse = new ResultPT();
             try
             {
-                var objConnectionDetails = await _connectionService.GetQBOAuthConfigureByCompanyId(companyId);
+                var objConnectionDetails = await _connectionService.GetQBOAuthConfigureByCompanyId(companyId.ToString());
                 if (objConnectionDetails != null && objConnectionDetails.RefreshToken != null)
                 {
                     QBOAuthClient.RevokeToken(objConnectionDetails.RefreshToken);
