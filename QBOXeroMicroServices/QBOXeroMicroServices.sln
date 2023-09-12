@@ -7,11 +7,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QBOXeroMicroServices", "QBO
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MicroServices", "MicroServices", "{ADCE9E8B-8C6A-49D6-AB85-C36321C7F5FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessAccessLayer", "BusinessAccessLayer\BusinessAccessLayer.csproj", "{EA98D62F-EFCA-4D0C-9D12-E45557058BDC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessAccessLayer", "BusinessAccessLayer\BusinessAccessLayer.csproj", "{EA98D62F-EFCA-4D0C-9D12-E45557058BDC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QBOCore", "QBOCore\QBOCore.csproj", "{31282D39-CF71-4963-BEDA-A22A9C2590B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QBOCore", "QBOCore\QBOCore.csproj", "{31282D39-CF71-4963-BEDA-A22A9C2590B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{6BAD2328-5522-4EC8-85D4-157C766AF51D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{6BAD2328-5522-4EC8-85D4-157C766AF51D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GetQBOCustomers", "GetQBOCustomers\GetQBOCustomers.csproj", "{859E8A56-B040-4AA9-9A51-FAB411D926B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeleteQBOCustomer", "DeleteQBOCustomer\DeleteQBOCustomer.csproj", "{28C9799A-2FDD-4B4D-8E1E-5B455405A2C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InsertUpdateQBOCustomer", "InsertUpdateQBOCustomer\InsertUpdateQBOCustomer.csproj", "{5D777CDF-9159-4649-A20B-A65CDF1B4E4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,9 +41,26 @@ Global
 		{6BAD2328-5522-4EC8-85D4-157C766AF51D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BAD2328-5522-4EC8-85D4-157C766AF51D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BAD2328-5522-4EC8-85D4-157C766AF51D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{859E8A56-B040-4AA9-9A51-FAB411D926B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{859E8A56-B040-4AA9-9A51-FAB411D926B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{859E8A56-B040-4AA9-9A51-FAB411D926B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{859E8A56-B040-4AA9-9A51-FAB411D926B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28C9799A-2FDD-4B4D-8E1E-5B455405A2C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28C9799A-2FDD-4B4D-8E1E-5B455405A2C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28C9799A-2FDD-4B4D-8E1E-5B455405A2C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28C9799A-2FDD-4B4D-8E1E-5B455405A2C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D777CDF-9159-4649-A20B-A65CDF1B4E4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D777CDF-9159-4649-A20B-A65CDF1B4E4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D777CDF-9159-4649-A20B-A65CDF1B4E4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D777CDF-9159-4649-A20B-A65CDF1B4E4B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{859E8A56-B040-4AA9-9A51-FAB411D926B7} = {ADCE9E8B-8C6A-49D6-AB85-C36321C7F5FC}
+		{28C9799A-2FDD-4B4D-8E1E-5B455405A2C1} = {ADCE9E8B-8C6A-49D6-AB85-C36321C7F5FC}
+		{5D777CDF-9159-4649-A20B-A65CDF1B4E4B} = {ADCE9E8B-8C6A-49D6-AB85-C36321C7F5FC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {45F568BB-4B81-410C-A09A-BBD4B2902B09}

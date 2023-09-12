@@ -1,11 +1,15 @@
 ﻿using BusinessAccessLayer.Common;
 using BusinessAccessLayer.Model;
+using BusinessAccessLayer.ViewModel;
 using DataAccessLayer.Interfaces;
+using Intuit.Ipp.Data;
 using Intuit.Ipp.OAuth2PlatformClient;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using QBOCore;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 using static BusinessAccessLayer.Common.Enums;
 
 namespace QBOXeroMicroServices.Controllers

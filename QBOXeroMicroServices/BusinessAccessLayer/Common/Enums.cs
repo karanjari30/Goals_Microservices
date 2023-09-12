@@ -10,7 +10,7 @@ namespace BusinessAccessLayer.Common
     {
         public enum ResponseStatus
         {
-            Success = 1, Error = 0, Unauthorized = 401
+            Success = 1, Error = 0, Unauthorized = 401, BadRequest = 400
         }
     }
 }

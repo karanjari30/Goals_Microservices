@@ -14,6 +14,10 @@ namespace BusinessAccessLayer.Common
         public static string QBOEnvironment = string.Empty;
         public static string QBOBaseUrl = string.Empty;
 
+        public static string QBOCutomerGet = string.Empty;
+        public static string QBOCustomerInsertUpdate = string.Empty;
+        public static string QBOCustomerDelete = string.Empty;
+
         static AppConfiguration()
         {
             var configurationBuilder = new ConfigurationBuilder();
@@ -38,6 +42,10 @@ namespace BusinessAccessLayer.Common
             QBORedirectUrl = root.GetSection("QBOConfig").GetSection(HostEnvironment).GetSection("QBORedirectUrl").Value;
             QBOEnvironment = root.GetSection("QBOConfig").GetSection(HostEnvironment).GetSection("QBOEnvironment").Value;
             QBOBaseUrl = root.GetSection("QBOConfig").GetSection(HostEnvironment).GetSection("QBOBaseUrl").Value;
+
+            QBOCutomerGet = root.GetSection("MicroServiceEndPoints").GetSection(HostEnvironment).GetSection("QBOCutomerGet").Value;
+            QBOCustomerInsertUpdate = root.GetSection("MicroServiceEndPoints").GetSection(HostEnvironment).GetSection("QBOCustomerInsertUpdate").Value;
+            QBOCustomerDelete = root.GetSection("MicroServiceEndPoints").GetSection(HostEnvironment).GetSection("QBOCustomerDelete").Value;
         }
     }
 }

@@ -23,6 +23,12 @@ namespace BusinessAccessLayer.Common
         public const string CustomersFoundMessage = "Customers found";
         public const string CustomersNotFoundMessage = "Customers not found";
         public const string QBOTokenExpire = "QuickBooks access token expire or not found";
+        public const string QueueItemNotFound = "Queue Item Not Found.";
+        public const string InvalidData = "Invalid data";
+        public const string CustomerIdMessage = "Customer is empty or null";
+        public const string CustomerDeleteMessage = "Customer is deleted";
+        public const string CustomerInsertUpdateMessage = "Customer is insert or update successfully";
+
     }
     public static class GetCommonMessage
     {

@@ -11,8 +11,6 @@ namespace DataAccessLayer.Services
 
         public ConnectionService()
         {
-            var cscd = AppConfiguration.ConnectionString;
-
             var client = new MongoClient(AppConfiguration.ConnectionString);
             var database = client.GetDatabase(AppConfiguration.DatabaseName);
             _qBOAuth = database.GetCollection<QBOAuth>("QBOAuth");

@@ -1,15 +1,24 @@
 ﻿using BusinessAccessLayer.Common;
+using BusinessAccessLayer.Model;
+using DataAccessLayer.Interfaces;
 using Intuit.Ipp.Core;
 using Intuit.Ipp.Data;
 using Intuit.Ipp.OAuth2PlatformClient;
 using Intuit.Ipp.QueryFilter;
 using System.Text;
+using static Intuit.Ipp.OAuth2PlatformClient.OidcConstants;
 
 namespace QBOCore
 {
     public class QBOAuthClient
     {
         public static OAuth2Client auth2Client = new OAuth2Client(AppConfiguration.QBOClientID, AppConfiguration.QBOClientSecret, AppConfiguration.QBORedirectUrl, AppConfiguration.QBOEnvironment); // environment is “sandbox” or “production”
+
+        private readonly IConnectionService _connectionService;
+        public QBOAuthClient(IConnectionService connectionService)
+        {
+            _connectionService = connectionService;
+        }
 
         public static string GetAuthorizationURL(Guid companyId)
         {
@@ -26,7 +35,54 @@ namespace QBOCore
             return authorizationUrl.ToString();
         }
 
-        public static TokenResponse GetBearerTokenAsync(string code)
+        public async Task<string> GetAccessToken(string realmId)
+        {
+            QBOAuth authConfig = new QBOAuth();
+            try
+            {
+                authConfig = await _connectionService.GetQuickBooksConnectionByRealmId(realmId);
+                TimeSpan span = DateTime.UtcNow.Subtract((DateTime)authConfig.AccessTokenExpiryDate);
+                if (span.TotalMinutes > 50 || DateTime.UtcNow > authConfig.AccessTokenExpiryDate)
+                {
+                    await RefreshTokenAsync(authConfig);
+                    authConfig = await _connectionService.GetQuickBooksConnectionByRealmId(realmId);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return authConfig.AccessToken;
+        }
+
+        private async System.Threading.Tasks.Task RefreshTokenAsync(QBOAuth authConfig)
+        {
+            try
+            {
+                var objRefreshToken = await auth2Client.RefreshTokenAsync(authConfig.RefreshToken);
+                if (!string.IsNullOrEmpty(objRefreshToken.AccessToken) && !string.IsNullOrEmpty(objRefreshToken.RefreshToken))
+                {
+                    QBOAuth qBOAuth = new QBOAuth()
+                    {
+                        AccountingCompanyId = authConfig.AccountingCompanyId,
+                        ERPCompanyName = authConfig.ERPCompanyName,
+                        ERPCompanyId = authConfig.ERPCompanyId,
+                        AccessToken = objRefreshToken.AccessToken,
+                        RefreshToken = objRefreshToken.RefreshToken,
+                        AccessTokenExpiryDate = (DateTime.UtcNow.ToEpochTime() + objRefreshToken.AccessTokenExpiresIn).ToDateTimeFromEpoch(),
+                        RefreshTokenExpiryDate = (DateTime.UtcNow.ToEpochTime() + objRefreshToken.RefreshTokenExpiresIn).ToDateTimeFromEpoch(),
+                        IsCompanyConnected = true,
+                    };
+                    _connectionService.InsertOrUpdateAuthDetails(qBOAuth);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static Intuit.Ipp.OAuth2PlatformClient.TokenResponse GetBearerTokenAsync(string code)
         {
             try
             {
