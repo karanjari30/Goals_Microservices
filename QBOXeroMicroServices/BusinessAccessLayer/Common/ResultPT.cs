@@ -20,4 +20,8 @@ namespace BusinessAccessLayer.Common
     {
         public List<Customer> ReturnObject { get; set; }
     }
+    public class InvoiceSyncResult : DownloadResultPT
+    {
+        public List<Invoice> ReturnObject { get; set; }
+    }
 }

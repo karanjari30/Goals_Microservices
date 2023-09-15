@@ -89,5 +89,87 @@ namespace QBOCore
             }
         }
         #endregion
+
+        #region Invoice
+        public List<Invoice> GetQBOInvoices(List<Invoice> invoices, string companyAccountID, QueryService<Invoice> qboQueryService, QBOInvoiceReqViewModel qBOInvoiceReq, int startPosition = 1, int maxresults = 500)
+        {
+            try
+            {
+                string query = "";
+                if (qBOInvoiceReq != null && qBOInvoiceReq.ToDate != null && qBOInvoiceReq.FromDate != null && Convert.ToDateTime(qBOInvoiceReq.ToDate).Year > 1970 && Convert.ToDateTime(qBOInvoiceReq.FromDate).Year > 1970)
+                {
+                    query = string.Format("SELECT * FROM Invoice where MetaData.CreateTime >= '" + Convert.ToDateTime(qBOInvoiceReq.FromDate).ToString("yyyy-MM-dd") + "' AND MetaData.LastUpdatedTime <= '" + Convert.ToDateTime(qBOInvoiceReq.ToDate).ToString("yyyy-MM-dd") + "' startPosition " + startPosition + " maxresults " + maxresults);
+                }
+                else if (qBOInvoiceReq != null && qBOInvoiceReq.ToDate != null && Convert.ToDateTime(qBOInvoiceReq.ToDate).Year > 1970)
+                {
+                    query = string.Format("SELECT * FROM Invoice where MetaData.LastUpdatedTime >= '" + Convert.ToDateTime(qBOInvoiceReq.ToDate).ToString("yyyy-MM-dd") + "' startPosition " + startPosition + " maxresults " + maxresults);
+                }
+                else
+                {
+                    query = string.Format("SELECT * FROM Invoice order by id asc startPosition " + startPosition + " maxresults 500");
+                }
+
+                var lstcustomers = qboQueryService.ExecuteIdsQuery(query, QueryOperationType.query).ToList();
+                invoices.AddRange(lstcustomers);
+
+                if (lstcustomers.Count == maxresults)
+                {
+                    GetQBOInvoices(invoices, companyAccountID, qboQueryService, qBOInvoiceReq, startPosition: startPosition + maxresults, maxresults: maxresults);
+                }
+                return invoices;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public Invoice CreateUpdateInvoice(Invoice invoice, string realmId, string accessToken)
+        {
+            try
+            {
+                var objDataService = new DataService(QBOAuthClient.Service(realmId, accessToken));
+                if (!string.IsNullOrEmpty(invoice.Id))
+                {
+                    var objInvoice = (new QueryService<Invoice>(QBOAuthClient.Service(realmId, accessToken))).ExecuteIdsQuery("SELECT * FROM Invoice WHERE Id ='" + (!string.IsNullOrEmpty(invoice.Id) ? invoice.Id.Replace("'", "\\'") : "") + "'", QueryOperationType.query).FirstOrDefault();
+                    if (objInvoice != null)
+                    {
+                        invoice = objDataService.Update(invoice);
+                    }
+                }
+                else
+                {
+                    invoice = objDataService.Add(invoice);
+                }
+                return invoice;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public Invoice DeleteInvoiceById(string invoiceId, string realmId, string accessToken)
+        {
+            try
+            {
+                Invoice invoice = null;
+                var objDataService = new DataService(QBOAuthClient.Service(realmId, accessToken));
+                if (!string.IsNullOrEmpty(invoiceId))
+                {
+                    var objInvoice = (new QueryService<Invoice>(QBOAuthClient.Service(realmId, accessToken))).ExecuteIdsQuery("SELECT * FROM Invoice WHERE Id ='" + invoiceId + "'", QueryOperationType.query).FirstOrDefault();
+                    if (objInvoice != null)
+                    {
+                        invoice = objDataService.Delete(objInvoice);
+                    }
+                }
+                return invoice;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
     }
 }

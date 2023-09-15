@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BusinessAccessLayer.Common
+﻿namespace BusinessAccessLayer.Common
 {
     public class Message
     {
@@ -28,7 +22,9 @@ namespace BusinessAccessLayer.Common
         public const string CustomerIdMessage = "Customer is empty or null";
         public const string CustomerDeleteMessage = "Customer is deleted";
         public const string CustomerInsertUpdateMessage = "Customer is insert or update successfully";
-
+        public const string InvoiceIdMessage = "Invoice is empty or null";
+        public const string InvoiceDeleteMessage = "Invoice is deleted";
+        public const string InvoiceInsertUpdateMessage = "Invoice is insert or update successfully";
     }
     public static class GetCommonMessage
     {
