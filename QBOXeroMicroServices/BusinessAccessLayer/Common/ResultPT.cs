@@ -24,4 +24,8 @@ namespace BusinessAccessLayer.Common
     {
         public List<Invoice> ReturnObject { get; set; }
     }
+    public class PaymentSyncResult : DownloadResultPT
+    {
+        public List<Payment> ReturnObject { get; set; }
+    }
 }

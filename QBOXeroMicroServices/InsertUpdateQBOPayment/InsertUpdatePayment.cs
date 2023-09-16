@@ -14,50 +14,51 @@ using BusinessAccessLayer.ViewModel;
 using Intuit.Ipp.Data;
 using static BusinessAccessLayer.Common.Enums;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace InsertUpdateQBOInvoice
+namespace InsertUpdateQBOPayment
 {
-    public class InsertUpdateInvoice
+    public class InsertUpdatePayment
     {
         private readonly IConnectionService _connectionService;
         public readonly QBOAuthClient _qoAuthClient;
         public readonly QBOClients _qboClients;
-        public InsertUpdateInvoice(IConnectionService connectionService, QBOAuthClient qboAuthClient, QBOClients qboClients)
+        public InsertUpdatePayment(IConnectionService connectionService, QBOAuthClient qboAuthClient, QBOClients qboClients)
         {
             _connectionService = connectionService;
             _qoAuthClient = qboAuthClient;
             _qboClients = qboClients;
         }
 
-        [FunctionName("InsertUpdateInvoice")]
+        [FunctionName("InsertUpdatePayment")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
-            var objResultPT = new InvoiceSyncResult();
+            var objResultPT = new PaymentSyncResult();
             try
             {
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 if (!string.IsNullOrEmpty(requestBody))
                 {
-                    var requestModel = JsonConvert.DeserializeObject<QBOInvoiceInsertUpdateReqViewModel>(requestBody);
+                    var requestModel = JsonConvert.DeserializeObject<QBOPaymentInsertUpdateReqViewModel>(requestBody);
                     if (!string.IsNullOrEmpty(requestModel.AccountingCompanyId))
                     {
                         var objConnectionData = await _connectionService.GetQBOAuthConfigureByCompanyId(requestModel.AccountingCompanyId.ToString());
                         if (objConnectionData != null)
                         {
-                            List<Invoice> invoiceList = new List<Invoice>();
-                            foreach (var invoice in requestModel.Invoices)
+                            List<Payment> paymentList = new List<Payment>();
+                            foreach (var payment in requestModel.Payments)
                             {
                                 var accessToken = await _qoAuthClient.GetAccessToken(objConnectionData.ERPCompanyId);
                                 if (accessToken != null)
                                 {
-                                    var invoiceMapping = QBOInvoiceMapping(invoice);
-                                    var objinvoice = _qboClients.CreateUpdateInvoice(invoiceMapping, objConnectionData.ERPCompanyId, accessToken);
-                                    if (objinvoice != null)
+                                    var paymentMapping = QBOpaymentMapping(payment);
+                                    var objpayment = _qboClients.CreateUpdatePayment(paymentMapping, objConnectionData.ERPCompanyId, accessToken);
+                                    if (objpayment != null)
                                     {
-                                        invoiceList.Add(objinvoice);
+                                        paymentList.Add(objpayment);
                                     }
                                 }
                                 else
@@ -66,9 +67,9 @@ namespace InsertUpdateQBOInvoice
                                     objResultPT.TransactionStatus = ResponseStatus.Error;
                                 }
                             }
-                            objResultPT.ResultMsg = Message.InvoiceInsertUpdateMessage;
+                            objResultPT.ResultMsg = Message.PaymentInsertUpdateMessage;
                             objResultPT.TransactionStatus = ResponseStatus.Success;
-                            objResultPT.ReturnObject = invoiceList;
+                            objResultPT.ReturnObject = paymentList;
                         }
                         else
                         {
@@ -97,46 +98,44 @@ namespace InsertUpdateQBOInvoice
             return new OkObjectResult(objResultPT);
         }
 
-        private Invoice QBOInvoiceMapping(InvoiceReqViewModel reqViewModel)
+        private Payment QBOpaymentMapping(PaymentReqViewModel reqViewModel)
         {
-            Invoice invoice = new Invoice();
+            var objPayment = new Payment();
+            objPayment.CustomerRef = new ReferenceType { Value = reqViewModel.CustomerId };
+            objPayment.PaymentRefNum = reqViewModel.PaymentNo ?? "";
+            objPayment.UnappliedAmt = 0;
+            objPayment.UnappliedAmtSpecified = true;
+            objPayment.TotalAmt = reqViewModel.invoices.Sum(x => x.amountPaid) ?? 0;
+            objPayment.TotalAmtSpecified = true;
+            objPayment.CurrencyRef = new ReferenceType { Value = "USD" };
+            objPayment.PaymentMethodRef = new ReferenceType { Value = reqViewModel.PaymentMethodId ?? "" };
+            objPayment.DepositToAccountRef = new ReferenceType { Value = reqViewModel.DepositToAccountId ?? "" };
+
             List<Line> lines = new List<Line>();
-
-            if (!string.IsNullOrEmpty(reqViewModel.Id))
+            foreach (var invoice in reqViewModel.invoices)
             {
-                invoice.Id = reqViewModel.Id ?? "";
-            }
-            invoice.DocNumber = reqViewModel.DocNumber ?? "";
-            invoice.TxnDate = reqViewModel.TxnDate;
-            invoice.CustomerRef = new ReferenceType()
-            {
-                Value = reqViewModel.CustomerRefValue ?? ""
-            };
-            
-            foreach(var objLine in reqViewModel.Line) 
-            {
-                SalesItemLineDetail salesItemLineDetail = new SalesItemLineDetail()
+                LinkedTxn[] objLinkedTxn = new LinkedTxn[] { };
+                objLinkedTxn = new LinkedTxn[]
                 {
-                    ItemRef = new ReferenceType()
-                    {
-                        Value = objLine.SalesItemLineDetail != null && !string.IsNullOrEmpty(objLine.SalesItemLineDetail.ItemRefValue) ? objLine.SalesItemLineDetail.ItemRefValue : ""
-                    }
+                        new LinkedTxn()
+                        {
+                            TxnId = invoice.erpInvoiceId,
+                            TxnType = "Invoice",
+                        }
                 };
-
                 lines.Add(
-                    new Line()
-                    {
-                        DetailType = LineDetailTypeEnum.SalesItemLineDetail,
-                        DetailTypeSpecified = true,
-                        Amount = (decimal)(objLine.Qty * objLine.UnitPrice),
-                        AmountSpecified = true,
-                        AnyIntuitObject = salesItemLineDetail,
-                        Description = objLine.Description ?? "",
-                    });
+                        new Line()
+                        {
+                            LinkedTxn = objLinkedTxn,
+                            DetailType = LineDetailTypeEnum.PaymentLineDetail,
+                            DetailTypeSpecified = true,
+                            Amount = invoice.amountPaid ?? 0,
+                            AmountSpecified = true,
+                        });
             }
-            invoice.Line = lines.ToArray();
+            objPayment.Line = lines.ToArray();
 
-            return invoice;
+            return objPayment;
         }
     }
 }

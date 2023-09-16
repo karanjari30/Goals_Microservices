@@ -171,5 +171,87 @@ namespace QBOCore
             }
         }
         #endregion
+
+        #region Payment
+        public List<Payment> GetQBOPayments(List<Payment> payments, string companyAccountID, QueryService<Payment> qboQueryService, QBOPaymentReqViewModel qBOPaymentReq, int startPosition = 1, int maxresults = 500)
+        {
+            try
+            {
+                string query = "";
+                if (qBOPaymentReq != null && qBOPaymentReq.ToDate != null && qBOPaymentReq.FromDate != null && Convert.ToDateTime(qBOPaymentReq.ToDate).Year > 1970 && Convert.ToDateTime(qBOPaymentReq.FromDate).Year > 1970)
+                {
+                    query = string.Format("SELECT * FROM Payment where MetaData.CreateTime >= '" + Convert.ToDateTime(qBOPaymentReq.FromDate).ToString("yyyy-MM-dd") + "' AND MetaData.LastUpdatedTime <= '" + Convert.ToDateTime(qBOPaymentReq.ToDate).ToString("yyyy-MM-dd") + "' startPosition " + startPosition + " maxresults " + maxresults);
+                }
+                else if (qBOPaymentReq != null && qBOPaymentReq.ToDate != null && Convert.ToDateTime(qBOPaymentReq.ToDate).Year > 1970)
+                {
+                    query = string.Format("SELECT * FROM Payment where MetaData.LastUpdatedTime >= '" + Convert.ToDateTime(qBOPaymentReq.ToDate).ToString("yyyy-MM-dd") + "' startPosition " + startPosition + " maxresults " + maxresults);
+                }
+                else
+                {
+                    query = string.Format("SELECT * FROM Payment order by id asc startPosition " + startPosition + " maxresults 500");
+                }
+
+                var lstPayments = qboQueryService.ExecuteIdsQuery(query, QueryOperationType.query).ToList();
+                payments.AddRange(lstPayments);
+
+                if (lstPayments.Count == maxresults)
+                {
+                    GetQBOPayments(payments, companyAccountID, qboQueryService, qBOPaymentReq, startPosition: startPosition + maxresults, maxresults: maxresults);
+                }
+                return payments;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public Payment CreateUpdatePayment(Payment payment, string realmId, string accessToken)
+        {
+            try
+            {
+                var objDataService = new DataService(QBOAuthClient.Service(realmId, accessToken));
+                if (!string.IsNullOrEmpty(payment.Id))
+                {
+                    var objPayment = (new QueryService<Payment>(QBOAuthClient.Service(realmId, accessToken))).ExecuteIdsQuery("SELECT * FROM Payment WHERE Id ='" + (!string.IsNullOrEmpty(payment.Id) ? payment.Id.Replace("'", "\\'") : "") + "'", QueryOperationType.query).FirstOrDefault();
+                    if (objPayment != null)
+                    {
+                        payment = objDataService.Update(payment);
+                    }
+                }
+                else
+                {
+                    payment = objDataService.Add(payment);
+                }
+                return payment;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public Payment DeletePaymentById(string paymentId, string realmId, string accessToken)
+        {
+            try
+            {
+                Payment payment = null;
+                var objDataService = new DataService(QBOAuthClient.Service(realmId, accessToken));
+                if (!string.IsNullOrEmpty(paymentId))
+                {
+                    var objPayment = (new QueryService<Payment>(QBOAuthClient.Service(realmId, accessToken))).ExecuteIdsQuery("SELECT * FROM Payment WHERE Id ='" + paymentId + "'", QueryOperationType.query).FirstOrDefault();
+                    if (objPayment != null)
+                    {
+                        payment = objDataService.Delete(objPayment);
+                    }
+                }
+                return payment;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
     }
 }

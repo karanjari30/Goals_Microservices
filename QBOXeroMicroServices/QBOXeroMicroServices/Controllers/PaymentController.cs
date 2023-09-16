@@ -1,5 +1,6 @@
 ﻿using BusinessAccessLayer.Common;
 using BusinessAccessLayer.ViewModel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using static BusinessAccessLayer.Common.Enums;
 using System.Text;
@@ -9,13 +10,13 @@ namespace QBOXeroMicroServices.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomerController : ControllerBase
+    public class PaymentController : ControllerBase
     {
         [HttpPost]
-        [Route("/GetQBOCustomer")]
-        public async Task<IActionResult> GetQBOCustomer([FromBody] QBOCustomerReqViewModel model)
+        [Route("/GetQBOPayment")]
+        public async Task<IActionResult> GetQBOPayment([FromBody] QBOPaymentReqViewModel model)
         {
-            var objResponse = new CustomerManaualSyncResult();
+            var objResponse = new PaymentSyncResult();
             try
             {
                 if (model == null)
@@ -29,12 +30,12 @@ namespace QBOXeroMicroServices.Controllers
                 {
                     var json = JsonConvert.SerializeObject(model);
                     var content = new StringContent(json, Encoding.UTF8, "application/json");
-                    var response = await httpClient.PostAsync(AppConfiguration.QBOCutomerGet, content);
+                    var response = await httpClient.PostAsync(AppConfiguration.QBOPaymentGet, content);
 
                     if (response.IsSuccessStatusCode)
                     {
                         var result = await response.Content.ReadAsStringAsync();
-                        objResponse = JsonConvert.DeserializeObject<CustomerManaualSyncResult>(result);
+                        objResponse = JsonConvert.DeserializeObject<PaymentSyncResult>(result);
                     }
                     else
                     {
@@ -51,10 +52,10 @@ namespace QBOXeroMicroServices.Controllers
         }
 
         [HttpPost]
-        [Route("/InsertUpdateQBOCustomer")]
-        public async Task<IActionResult> InsertUpdateQBOCustomer([FromBody] QBOCustomerInsertUpdateReqViewModel model)
+        [Route("/InsertUpdateQBOPayment")]
+        public async Task<IActionResult> InsertUpdateQBOPayment([FromBody] QBOPaymentInsertUpdateReqViewModel model)
         {
-            var objResponse = new CustomerManaualSyncResult();
+            var objResponse = new PaymentSyncResult();
             try
             {
                 if (model == null)
@@ -64,10 +65,10 @@ namespace QBOXeroMicroServices.Controllers
                     return BadRequest(objResponse);
                 }
 
-                if(model.customers == null && model.customers.Count == 0)
+                if (model.Payments == null && model.Payments.Count == 0)
                 {
                     objResponse.TransactionStatus = ResponseStatus.Success;
-                    objResponse.ResultMsg = string.Format(Message.CustomerIdMessage);
+                    objResponse.ResultMsg = string.Format(Message.InvoiceIdMessage);
                     return Ok(objResponse);
                 }
 
@@ -75,12 +76,12 @@ namespace QBOXeroMicroServices.Controllers
                 {
                     var json = JsonConvert.SerializeObject(model);
                     var content = new StringContent(json, Encoding.UTF8, "application/json");
-                    var response = await httpClient.PostAsync(AppConfiguration.QBOCustomerInsertUpdate, content);
+                    var response = await httpClient.PostAsync(AppConfiguration.QBOPaymentInsertUpdate, content);
 
                     if (response.IsSuccessStatusCode)
                     {
                         var result = await response.Content.ReadAsStringAsync();
-                        objResponse = JsonConvert.DeserializeObject<CustomerManaualSyncResult>(result);
+                        objResponse = JsonConvert.DeserializeObject<PaymentSyncResult>(result);
                     }
                     else
                     {
@@ -97,8 +98,8 @@ namespace QBOXeroMicroServices.Controllers
         }
 
         [HttpDelete]
-        [Route("/DeleteQBOCustomer")]
-        public async Task<IActionResult> DeleteQBOCustomer([FromBody] QBOCustomerDeleteReqViewModel model)
+        [Route("/DeleteQBOPayment")]
+        public async Task<IActionResult> DeleteQBOPayment([FromBody] QBOPaymentDeleteReqViewModel model)
         {
             var objResponse = new DownloadResultPT();
             try
@@ -114,7 +115,7 @@ namespace QBOXeroMicroServices.Controllers
                 {
                     var json = JsonConvert.SerializeObject(model);
                     var content = new StringContent(json, Encoding.UTF8, "application/json");
-                    var response = await httpClient.PostAsync(AppConfiguration.QBOCustomerDelete, content);
+                    var response = await httpClient.PostAsync(AppConfiguration.QBOPaymentDelete, content);
 
                     if (response.IsSuccessStatusCode)
                     {

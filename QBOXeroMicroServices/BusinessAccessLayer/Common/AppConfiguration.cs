@@ -20,6 +20,9 @@ namespace BusinessAccessLayer.Common
         public static string QBOInvoiceGet = string.Empty;
         public static string QBOInvoiceInsertUpdate = string.Empty;
         public static string QBOInvoiceDelete = string.Empty;
+        public static string QBOPaymentGet = string.Empty;
+        public static string QBOPaymentInsertUpdate = string.Empty;
+        public static string QBOPaymentDelete = string.Empty;
 
         static AppConfiguration()
         {
@@ -52,6 +55,9 @@ namespace BusinessAccessLayer.Common
             QBOInvoiceGet = root.GetSection("MicroServiceEndPoints").GetSection(HostEnvironment).GetSection("QBOInvoiceGet").Value;
             QBOInvoiceInsertUpdate = root.GetSection("MicroServiceEndPoints").GetSection(HostEnvironment).GetSection("QBOInvoiceInsertUpdate").Value;
             QBOInvoiceDelete = root.GetSection("MicroServiceEndPoints").GetSection(HostEnvironment).GetSection("QBOInvoiceDelete").Value;
+            QBOPaymentGet = root.GetSection("MicroServiceEndPoints").GetSection(HostEnvironment).GetSection("QBOPaymentGet").Value;
+            QBOPaymentInsertUpdate = root.GetSection("MicroServiceEndPoints").GetSection(HostEnvironment).GetSection("QBOPaymentInsertUpdate").Value;
+            QBOPaymentDelete = root.GetSection("MicroServiceEndPoints").GetSection(HostEnvironment).GetSection("QBOPaymentDelete").Value;
         }
     }
 }

@@ -11,7 +11,7 @@ namespace QBOXeroMicroServices.Controllers
     [ApiController]
     public class InvoiceController : ControllerBase
     {
-        [HttpGet]
+        [HttpPost]
         [Route("/GetQBOInvoice")]
         public async Task<IActionResult> GetQBOInvoice([FromBody] QBOInvoiceReqViewModel model)
         {
@@ -64,7 +64,7 @@ namespace QBOXeroMicroServices.Controllers
                     return BadRequest(objResponse);
                 }
 
-                if (model.invoices == null && model.invoices.Count == 0)
+                if (model.Invoices == null && model.Invoices.Count == 0)
                 {
                     objResponse.TransactionStatus = ResponseStatus.Success;
                     objResponse.ResultMsg = string.Format(Message.InvoiceIdMessage);
@@ -81,6 +81,45 @@ namespace QBOXeroMicroServices.Controllers
                     {
                         var result = await response.Content.ReadAsStringAsync();
                         objResponse = JsonConvert.DeserializeObject<InvoiceSyncResult>(result);
+                    }
+                    else
+                    {
+                        return StatusCode((int)response.StatusCode);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                objResponse.TransactionStatus = ResponseStatus.Error;
+                objResponse.ResultMsg = GetCommonMessage.GetExceptionMessage(ex);
+            }
+            return Ok(objResponse);
+        }
+
+        [HttpDelete]
+        [Route("/DeleteQBOInvoice")]
+        public async Task<IActionResult> DeleteQBOInvoice([FromBody] QBOInvoiceDeleteReqViewModel model)
+        {
+            var objResponse = new DownloadResultPT();
+            try
+            {
+                if (model == null)
+                {
+                    objResponse.TransactionStatus = ResponseStatus.BadRequest;
+                    objResponse.ResultMsg = string.Format(Message.InvalidData);
+                    return BadRequest(objResponse);
+                }
+
+                using (var httpClient = new HttpClient())
+                {
+                    var json = JsonConvert.SerializeObject(model);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+                    var response = await httpClient.PostAsync(AppConfiguration.QBOInvoiceDelete, content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var result = await response.Content.ReadAsStringAsync();
+                        objResponse = JsonConvert.DeserializeObject<DownloadResultPT>(result);
                     }
                     else
                     {

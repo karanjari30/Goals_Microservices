@@ -5,7 +5,7 @@ namespace BusinessAccessLayer.ViewModel
     public class QBOInvoiceInsertUpdateReqViewModel
     {
         public string AccountingCompanyId { get; set; }
-        public List<InvoiceReqViewModel> invoices { get; set; }
+        public List<InvoiceReqViewModel> Invoices { get; set; }
     }
 
     public class InvoiceReqViewModel

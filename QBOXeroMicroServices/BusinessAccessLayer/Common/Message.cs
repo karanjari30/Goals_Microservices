@@ -23,8 +23,13 @@
         public const string CustomerDeleteMessage = "Customer is deleted";
         public const string CustomerInsertUpdateMessage = "Customer is insert or update successfully";
         public const string InvoiceIdMessage = "Invoice is empty or null";
-        public const string InvoiceDeleteMessage = "Invoice is deleted";
         public const string InvoiceInsertUpdateMessage = "Invoice is insert or update successfully";
+        public const string InvoiceDeleteMessage = "Invoice is deleted";
+        public const string PaymentsFoundMessage = "Payments found";
+        public const string PaymentsNotFoundMessage = "Payments not found";
+        public const string PaymentInsertUpdateMessage = "Payment is insert or update successfully";
+        public const string PaymentIdMessage = "Payment is empty or null";
+        public const string PaymentDeleteMessage = "Payment is deleted";
     }
     public static class GetCommonMessage
     {
