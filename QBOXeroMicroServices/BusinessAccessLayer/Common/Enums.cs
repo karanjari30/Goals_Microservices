@@ -12,5 +12,11 @@ namespace BusinessAccessLayer.Common
         {
             Success = 1, Error = 0, Unauthorized = 401, BadRequest = 400
         }
+
+        public enum ERPCompany
+        {
+            QuickBooks = 1,
+            Xero = 2
+        }
     }
 }

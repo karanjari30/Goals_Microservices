@@ -8,5 +8,7 @@ namespace DataAccessLayer.Interfaces
         Task<QBOAuth> GetQuickBooksConnectionByRealmId(string realmId);
         void InsertOrUpdateAuthDetails(QBOAuth qBOAuth);
         void DisconnectQuickBookCompany(QBOAuth qBOAuth);
+        Task<XeroAuth> GetXeroConnectionByTenantId(string tenantId);
+        void InsertOrUpdateAuthDetails(XeroAuth xeroAuth);
     }
 }

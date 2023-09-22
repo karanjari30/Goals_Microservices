@@ -1,15 +1,13 @@
 ﻿using BusinessAccessLayer.Common;
 using BusinessAccessLayer.Model;
-using BusinessAccessLayer.ViewModel;
 using DataAccessLayer.Interfaces;
-using Intuit.Ipp.Data;
 using Intuit.Ipp.OAuth2PlatformClient;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using QBOCore;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
+using XeroCore;
 using static BusinessAccessLayer.Common.Enums;
 
 namespace QBOXeroMicroServices.Controllers
@@ -26,7 +24,7 @@ namespace QBOXeroMicroServices.Controllers
 
         [HttpGet]
         [Route("[Controller]")]
-        public async Task<IActionResult> Index([Required] Guid companyId)
+        public async Task<IActionResult> Index([Required] Guid companyId, ERPCompany erpCompany)
         {
             var objResponse = new ResultPT();
             try
@@ -39,26 +37,54 @@ namespace QBOXeroMicroServices.Controllers
                 }
                 else
                 {
-                    var getConnectionData = await _connectionService.GetQBOAuthConfigureByCompanyId(companyId.ToString());
-                    if(getConnectionData == null)
+                    if(erpCompany == ERPCompany.QuickBooks)
                     {
-                        objResponse.ResponseStatus = ResponseStatus.Error;
-                        objResponse.Message = Message.OrganizationNotFoundMessage;
-                        objResponse.Result = QBOAuthClient.GetAuthorizationURL(companyId);
-                    }
-                    else
-                    {
-                        if (getConnectionData.IsCompanyConnected)
+                        var getConnectionData = await _connectionService.GetQBOAuthConfigureByCompanyId(companyId.ToString());
+                        if (getConnectionData == null)
                         {
                             objResponse.ResponseStatus = ResponseStatus.Success;
-                            objResponse.Message = Message.OrganizationFoundMessage;
-                            objResponse.Result = getConnectionData;
+                            objResponse.Message = Message.OrganizationNotFoundMessage;
+                            objResponse.Result = QBOAuthClient.GetAuthorizationURL(companyId);
                         }
                         else
                         {
-                            objResponse.ResponseStatus = ResponseStatus.Error;
+                            if (getConnectionData.IsCompanyConnected)
+                            {
+                                objResponse.ResponseStatus = ResponseStatus.Success;
+                                objResponse.Message = Message.OrganizationFoundMessage;
+                                objResponse.Result = getConnectionData;
+                            }
+                            else
+                            {
+                                objResponse.ResponseStatus = ResponseStatus.Success;
+                                objResponse.Message = Message.OrganizationNotFoundMessage;
+                                objResponse.Result = QBOAuthClient.GetAuthorizationURL(companyId);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var getXeroConnectionData = await _connectionService.GetXeroConnectionByTenantId(companyId.ToString());
+                        if (getXeroConnectionData == null)
+                        {
+                            objResponse.ResponseStatus = ResponseStatus.Success;
                             objResponse.Message = Message.OrganizationNotFoundMessage;
-                            objResponse.Result = QBOAuthClient.GetAuthorizationURL(companyId);
+                            objResponse.Result = XeroAuthClient.XeroConfiguration().BuildLoginUri();
+                        }
+                        else
+                        {
+                            if (getXeroConnectionData.IsCompanyConnected)
+                            {
+                                objResponse.ResponseStatus = ResponseStatus.Success;
+                                objResponse.Message = Message.OrganizationFoundMessage;
+                                objResponse.Result = getXeroConnectionData;
+                            }
+                            else
+                            {
+                                objResponse.ResponseStatus = ResponseStatus.Success;
+                                objResponse.Message = Message.OrganizationNotFoundMessage;
+                                objResponse.Result = XeroAuthClient.XeroConfiguration().BuildLoginUri();
+                            }
                         }
                     }
                 }
@@ -170,6 +196,65 @@ namespace QBOXeroMicroServices.Controllers
             {
                 objResponse.ResponseStatus = ResponseStatus.Error;
                 objResponse.Message = GetCommonMessage.GetExceptionMessage(ex);
+            }
+            return Ok(objResponse);
+        }
+
+        [Route("XeroCallback")]
+        [AllowAnonymous]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<IActionResult> XeroCallback([Required] string code)
+        {
+            var objResponse = new ResultPT();
+            if (!string.IsNullOrEmpty(code))
+            {
+                var client = XeroAuthClient.XeroConfiguration();
+                var tokenResponse = await client.RequestAccessTokenAsync(code);
+                if (tokenResponse != null && !string.IsNullOrEmpty(tokenResponse.AccessToken))
+                {
+                    var xeroConnection = await _connectionService.GetXeroConnectionByTenantId(tokenResponse.Tenants.FirstOrDefault().TenantId.ToString());
+                    if (xeroConnection != null)
+                    {
+                        if (xeroConnection.TenantId == tokenResponse.Tenants.FirstOrDefault().TenantId.ToString())
+                        {
+                            XeroAuth xeroAuth = new XeroAuth()
+                            {
+                                TenantId = tokenResponse.Tenants.FirstOrDefault().id.ToString(),
+                                TenantName = tokenResponse.Tenants.FirstOrDefault().TenantName,
+                                IdToken = tokenResponse.IdToken,
+                                AccessToken = tokenResponse.AccessToken,
+                                RefreshToken = tokenResponse.RefreshToken,
+                                AccessTokenExpiryDate = tokenResponse.ExpiresAtUtc,
+                                IsCompanyConnected = true,
+                            };
+                            _connectionService.InsertOrUpdateAuthDetails(xeroAuth);
+
+                            objResponse.ResponseStatus = ResponseStatus.Success;
+                            objResponse.Message = Message.XeroCompanyConnected;
+                        }
+                        else
+                        {
+                            objResponse.ResponseStatus = ResponseStatus.Success;
+                            objResponse.Message = Message.XeroCompanyAlreadyConnected;
+                        }
+                    }
+                    else
+                    {
+                        XeroAuth xeroAuth = new XeroAuth()
+                        {
+                            TenantId = tokenResponse.Tenants.FirstOrDefault().TenantId.ToString(),
+                            TenantName = tokenResponse.Tenants.FirstOrDefault().TenantName,
+                            IdToken = tokenResponse.IdToken,
+                            AccessToken = tokenResponse.AccessToken,
+                            RefreshToken = tokenResponse.RefreshToken,
+                            AccessTokenExpiryDate = tokenResponse.ExpiresAtUtc,
+                            IsCompanyConnected = true,
+                        };
+                        _connectionService.InsertOrUpdateAuthDetails(xeroAuth);
+                        objResponse.ResponseStatus = ResponseStatus.Success;
+                        objResponse.Message = Message.XeroCompanyConnected;
+                    }
+                }
             }
             return Ok(objResponse);
         }

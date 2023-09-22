@@ -14,6 +14,10 @@ namespace BusinessAccessLayer.Common
         public static string QBOEnvironment = string.Empty;
         public static string QBOBaseUrl = string.Empty;
 
+        public static string XeroClientID = string.Empty;
+        public static string XeroClientSecret = string.Empty;
+        public static string XeroRedirectUrl = string.Empty;
+                             
         public static string QBOCutomerGet = string.Empty;
         public static string QBOCustomerInsertUpdate = string.Empty;
         public static string QBOCustomerDelete = string.Empty;
@@ -23,6 +27,15 @@ namespace BusinessAccessLayer.Common
         public static string QBOPaymentGet = string.Empty;
         public static string QBOPaymentInsertUpdate = string.Empty;
         public static string QBOPaymentDelete = string.Empty;
+        public static string XeroCutomerGet = string.Empty;
+        public static string XeroCustomerInsertUpdate = string.Empty;
+        public static string XeroCustomerDelete = string.Empty;
+        public static string XeroInvoiceGet = string.Empty;
+        public static string XeroInvoiceInsertUpdate = string.Empty;
+        public static string XeroInvoiceDelete = string.Empty;
+        public static string XeroPaymentGet = string.Empty;
+        public static string XeroPaymentInsertUpdate = string.Empty;
+        public static string XeroPaymentDelete = string.Empty;
 
         static AppConfiguration()
         {
@@ -49,6 +62,10 @@ namespace BusinessAccessLayer.Common
             QBOEnvironment = root.GetSection("QBOConfig").GetSection(HostEnvironment).GetSection("QBOEnvironment").Value;
             QBOBaseUrl = root.GetSection("QBOConfig").GetSection(HostEnvironment).GetSection("QBOBaseUrl").Value;
 
+            XeroClientID = root.GetSection("XeroConfig").GetSection(HostEnvironment).GetSection("XeroClientID").Value;
+            XeroClientSecret = root.GetSection("XeroConfig").GetSection(HostEnvironment).GetSection("XeroClientSecret").Value;
+            XeroRedirectUrl = root.GetSection("XeroConfig").GetSection(HostEnvironment).GetSection("XeroRedirectUrl").Value;
+
             QBOCutomerGet = root.GetSection("MicroServiceEndPoints").GetSection(HostEnvironment).GetSection("QBOCutomerGet").Value;
             QBOCustomerInsertUpdate = root.GetSection("MicroServiceEndPoints").GetSection(HostEnvironment).GetSection("QBOCustomerInsertUpdate").Value;
             QBOCustomerDelete = root.GetSection("MicroServiceEndPoints").GetSection(HostEnvironment).GetSection("QBOCustomerDelete").Value;
@@ -58,6 +75,15 @@ namespace BusinessAccessLayer.Common
             QBOPaymentGet = root.GetSection("MicroServiceEndPoints").GetSection(HostEnvironment).GetSection("QBOPaymentGet").Value;
             QBOPaymentInsertUpdate = root.GetSection("MicroServiceEndPoints").GetSection(HostEnvironment).GetSection("QBOPaymentInsertUpdate").Value;
             QBOPaymentDelete = root.GetSection("MicroServiceEndPoints").GetSection(HostEnvironment).GetSection("QBOPaymentDelete").Value;
+            XeroCutomerGet = root.GetSection("MicroServiceEndPoints").GetSection(HostEnvironment).GetSection("XeroCutomerGet").Value;
+            XeroCustomerInsertUpdate = root.GetSection("MicroServiceEndPoints").GetSection(HostEnvironment).GetSection("XeroCustomerInsertUpdate").Value;
+            XeroCustomerDelete = root.GetSection("MicroServiceEndPoints").GetSection(HostEnvironment).GetSection("XeroCustomerDelete").Value;
+            XeroInvoiceGet = root.GetSection("MicroServiceEndPoints").GetSection(HostEnvironment).GetSection("XeroInvoiceGet").Value;
+            XeroInvoiceInsertUpdate = root.GetSection("MicroServiceEndPoints").GetSection(HostEnvironment).GetSection("XeroInvoiceInsertUpdate").Value;
+            XeroInvoiceDelete = root.GetSection("MicroServiceEndPoints").GetSection(HostEnvironment).GetSection("XeroInvoiceDelete").Value;
+            XeroPaymentGet = root.GetSection("MicroServiceEndPoints").GetSection(HostEnvironment).GetSection("XeroPaymentGet").Value;
+            XeroPaymentInsertUpdate = root.GetSection("MicroServiceEndPoints").GetSection(HostEnvironment).GetSection("XeroPaymentInsertUpdate").Value;
+            XeroPaymentDelete = root.GetSection("MicroServiceEndPoints").GetSection(HostEnvironment).GetSection("XeroPaymentDelete").Value;
         }
     }
 }

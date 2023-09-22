@@ -1,5 +1,4 @@
-﻿using Intuit.Ipp.Data;
-using static BusinessAccessLayer.Common.Enums;
+﻿using static BusinessAccessLayer.Common.Enums;
 
 namespace BusinessAccessLayer.Common
 {
@@ -18,14 +17,18 @@ namespace BusinessAccessLayer.Common
     }
     public class CustomerManaualSyncResult : DownloadResultPT
     {
-        public List<Customer> ReturnObject { get; set; }
+        public List<Intuit.Ipp.Data.Customer> ReturnObject { get; set; }
     }
     public class InvoiceSyncResult : DownloadResultPT
     {
-        public List<Invoice> ReturnObject { get; set; }
+        public List<Intuit.Ipp.Data.Invoice> ReturnObject { get; set; }
     }
     public class PaymentSyncResult : DownloadResultPT
     {
-        public List<Payment> ReturnObject { get; set; }
+        public List<Intuit.Ipp.Data.Payment> ReturnObject { get; set; }
+    }
+    public class XeroCustomerSyncResult : DownloadResultPT
+    {
+        public List<Xero.NetStandard.OAuth2.Model.Accounting.Contact> ReturnObject { get; set; }
     }
 }

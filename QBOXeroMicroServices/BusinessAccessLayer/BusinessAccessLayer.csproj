@@ -11,6 +11,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
     <PackageReference Include="MongoDB.Bson" Version="2.21.0" />
+    <PackageReference Include="Xero.NetStandard.OAuth2" Version="3.24.0" />
   </ItemGroup>
 
 </Project>
