@@ -35,9 +35,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XeroCore", "XeroCore\XeroCo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GetXeroCustomer", "GetXeroCustomer\GetXeroCustomer.csproj", "{7BB4F923-FBFC-468B-B9A3-A151A582F55C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InsertUpdateXeroCustomer", "InsertUpdateXeroCustomer\InsertUpdateXeroCustomer.csproj", "{74499CDC-7756-4886-9DD1-FC677B268BE0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InsertUpdateXeroCustomer", "InsertUpdateXeroCustomer\InsertUpdateXeroCustomer.csproj", "{74499CDC-7756-4886-9DD1-FC677B268BE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeleteXeroCustomer", "DeleteXeroCustomer\DeleteXeroCustomer.csproj", "{E82853FD-6FE2-4AA0-837B-9BD5B6236FA1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeleteXeroCustomer", "DeleteXeroCustomer\DeleteXeroCustomer.csproj", "{E82853FD-6FE2-4AA0-837B-9BD5B6236FA1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GetXeroInvoices", "GetXeroInvoices\GetXeroInvoices.csproj", "{B3CB2E2A-0A5D-45E8-8D0B-C1EA0EBB1396}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InsertUpdateXeroInvoice", "InsertUpdateXeroInvoice\InsertUpdateXeroInvoice.csproj", "{4A1FFCC2-A28B-4778-BFE2-DEDB964DC959}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeleteXeroInvoice", "DeleteXeroInvoice\DeleteXeroInvoice.csproj", "{13324EBB-C2ED-470F-8498-80245D4EB6E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -113,6 +119,18 @@ Global
 		{E82853FD-6FE2-4AA0-837B-9BD5B6236FA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E82853FD-6FE2-4AA0-837B-9BD5B6236FA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E82853FD-6FE2-4AA0-837B-9BD5B6236FA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3CB2E2A-0A5D-45E8-8D0B-C1EA0EBB1396}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3CB2E2A-0A5D-45E8-8D0B-C1EA0EBB1396}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3CB2E2A-0A5D-45E8-8D0B-C1EA0EBB1396}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3CB2E2A-0A5D-45E8-8D0B-C1EA0EBB1396}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A1FFCC2-A28B-4778-BFE2-DEDB964DC959}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A1FFCC2-A28B-4778-BFE2-DEDB964DC959}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A1FFCC2-A28B-4778-BFE2-DEDB964DC959}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A1FFCC2-A28B-4778-BFE2-DEDB964DC959}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13324EBB-C2ED-470F-8498-80245D4EB6E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13324EBB-C2ED-470F-8498-80245D4EB6E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13324EBB-C2ED-470F-8498-80245D4EB6E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13324EBB-C2ED-470F-8498-80245D4EB6E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -130,6 +148,9 @@ Global
 		{7BB4F923-FBFC-468B-B9A3-A151A582F55C} = {ADCE9E8B-8C6A-49D6-AB85-C36321C7F5FC}
 		{74499CDC-7756-4886-9DD1-FC677B268BE0} = {ADCE9E8B-8C6A-49D6-AB85-C36321C7F5FC}
 		{E82853FD-6FE2-4AA0-837B-9BD5B6236FA1} = {ADCE9E8B-8C6A-49D6-AB85-C36321C7F5FC}
+		{B3CB2E2A-0A5D-45E8-8D0B-C1EA0EBB1396} = {ADCE9E8B-8C6A-49D6-AB85-C36321C7F5FC}
+		{4A1FFCC2-A28B-4778-BFE2-DEDB964DC959} = {ADCE9E8B-8C6A-49D6-AB85-C36321C7F5FC}
+		{13324EBB-C2ED-470F-8498-80245D4EB6E2} = {ADCE9E8B-8C6A-49D6-AB85-C36321C7F5FC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {45F568BB-4B81-410C-A09A-BBD4B2902B09}

@@ -7,33 +7,33 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using BusinessAccessLayer.Common;
-using static BusinessAccessLayer.Common.Enums;
-using BusinessAccessLayer.ViewModel;
 using DataAccessLayer.Interfaces;
 using XeroCore;
+using BusinessAccessLayer.Common;
+using BusinessAccessLayer.ViewModel;
+using static BusinessAccessLayer.Common.Enums;
 
-namespace GetXeroCustomer
+namespace GetXeroInvoices
 {
-    public class XeroCustomer
+    public class GetInvoices
     {
         private readonly IConnectionService _connectionService;
         public readonly XeroAuthClient _xeroAuthClient;
         public readonly XeroClients _xeroClients;
-        public XeroCustomer(IConnectionService connectionService, XeroAuthClient xeroAuthClient, XeroClients xeroClients)
+        public GetInvoices(IConnectionService connectionService, XeroAuthClient xeroAuthClient, XeroClients xeroClients)
         {
             _connectionService = connectionService;
             _xeroAuthClient = xeroAuthClient;
             _xeroClients = xeroClients;
         }
 
-        [FunctionName("XeroCustomer")]
+        [FunctionName("GetInvoices")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
-            var objResultPT = new XeroCustomerSyncResult();
+            var objResultPT = new XeroInvoiceSyncResult();
             try
             {
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
@@ -48,12 +48,12 @@ namespace GetXeroCustomer
                             var accessToken = await _xeroAuthClient.GetAccessToken(objConnectionData.TenantId);
                             if (accessToken != null)
                             {
-                                var lstCustomers = await _xeroClients.GetContactsData(requestModel, accessToken, objConnectionData.TenantId);
-                                if (lstCustomers != null)
+                                var lstInvoices = await _xeroClients.GetInvoicesData(requestModel, accessToken, objConnectionData.TenantId);
+                                if (lstInvoices != null)
                                 {
                                     objResultPT.ResultMsg = Message.CustomersFoundMessage;
                                     objResultPT.TransactionStatus = ResponseStatus.Success;
-                                    objResultPT.ReturnObject = lstCustomers;
+                                    objResultPT.ReturnObject = lstInvoices;
                                 }
                                 else
                                 {

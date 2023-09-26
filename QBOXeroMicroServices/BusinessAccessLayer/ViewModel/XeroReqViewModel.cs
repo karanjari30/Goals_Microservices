@@ -1,6 +1,6 @@
 ﻿namespace BusinessAccessLayer.ViewModel
 {
-    public class XeroCustomerReqViewModel
+    public class XeroReqViewModel
     {
         //public string EntityName { get; set; }
         public string TenantId { get; set; }

@@ -137,7 +137,7 @@ namespace QBOXeroMicroServices.Controllers
 
         [HttpPost]
         [Route("/GetXeroCustomer")]
-        public async Task<IActionResult> GetXeroCustomer([FromBody] XeroCustomerReqViewModel model)
+        public async Task<IActionResult> GetXeroCustomer([FromBody] XeroReqViewModel model)
         {
             var objResponse = new XeroCustomerSyncResult();
             try

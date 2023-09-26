@@ -13,76 +13,73 @@ using BusinessAccessLayer.ViewModel;
 using DataAccessLayer.Interfaces;
 using XeroCore;
 
-namespace GetXeroCustomer
+namespace DeleteXeroInvoice
 {
-    public class XeroCustomer
+    public class DeleteInvoice
     {
         private readonly IConnectionService _connectionService;
         public readonly XeroAuthClient _xeroAuthClient;
         public readonly XeroClients _xeroClients;
-        public XeroCustomer(IConnectionService connectionService, XeroAuthClient xeroAuthClient, XeroClients xeroClients)
+        public DeleteInvoice(IConnectionService connectionService, XeroAuthClient xeroAuthClient, XeroClients xeroClients)
         {
             _connectionService = connectionService;
             _xeroAuthClient = xeroAuthClient;
             _xeroClients = xeroClients;
         }
-
-        [FunctionName("XeroCustomer")]
+        [FunctionName("DeleteInvoice")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
-            var objResultPT = new XeroCustomerSyncResult();
+            var objResultPT = new DownloadResultPT();
             try
             {
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 if (!string.IsNullOrEmpty(requestBody))
                 {
-                    var requestModel = JsonConvert.DeserializeObject<XeroReqViewModel>(requestBody);
+                    var requestModel = JsonConvert.DeserializeObject<XeroInvoiceDeleteReqViewModel>(requestBody);
                     if (!string.IsNullOrEmpty(requestModel.TenantId))
                     {
-                        var objConnectionData = await _connectionService.GetXeroConnectionByTenantId(requestModel.TenantId);
-                        if (objConnectionData != null)
+                        if (!string.IsNullOrEmpty(requestModel.InvoiceId))
                         {
-                            var accessToken = await _xeroAuthClient.GetAccessToken(objConnectionData.TenantId);
-                            if (accessToken != null)
+                            var objConnectionData = await _connectionService.GetXeroConnectionByTenantId(requestModel.TenantId);
+                            if (objConnectionData != null)
                             {
-                                var lstCustomers = await _xeroClients.GetContactsData(requestModel, accessToken, objConnectionData.TenantId);
-                                if (lstCustomers != null)
+                                var accessToken = await _xeroAuthClient.GetAccessToken(objConnectionData.TenantId);
+                                if (accessToken != null)
                                 {
-                                    objResultPT.ResultMsg = Message.CustomersFoundMessage;
-                                    objResultPT.TransactionStatus = ResponseStatus.Success;
-                                    objResultPT.ReturnObject = lstCustomers;
+                                    var invoice = await _xeroClients.DeleteInvoiceById(requestModel.InvoiceId, objConnectionData.TenantId, accessToken);
+                                    if (invoice != null)
+                                    {
+                                        objResultPT.ResultMsg = Message.InvoiceDeleteMessage;
+                                        objResultPT.TransactionStatus = ResponseStatus.Success;
+                                        objResultPT.ReturnObject = invoice.InvoiceID;
+                                    }
                                 }
                                 else
                                 {
-                                    objResultPT.ResultMsg = Message.CustomersFoundMessage;
-                                    objResultPT.TransactionStatus = ResponseStatus.Success;
+                                    objResultPT.ResultMsg = Message.XeroTokenExpire;
+                                    objResultPT.TransactionStatus = ResponseStatus.Error;
                                 }
                             }
                             else
                             {
-                                objResultPT.ResultMsg = Message.XeroTokenExpire;
+                                objResultPT.ResultMsg = Message.OrganizationNotFoundMessage;
                                 objResultPT.TransactionStatus = ResponseStatus.Error;
                             }
                         }
                         else
                         {
-                            objResultPT.ResultMsg = Message.OrganizationNotFoundMessage;
+                            objResultPT.ResultMsg = Message.InvoiceIdMessage;
                             objResultPT.TransactionStatus = ResponseStatus.Error;
                         }
                     }
                     else
                     {
-                        objResultPT.ResultMsg = Message.TenantIdMessage;
+                        objResultPT.ResultMsg = Message.CompanyIdMessage;
                         objResultPT.TransactionStatus = ResponseStatus.Error;
                     }
-                }
-                else
-                {
-                    objResultPT.ResultMsg = Message.QueueItemNotFound;
-                    objResultPT.TransactionStatus = ResponseStatus.Error;
                 }
             }
             catch (Exception ex)
@@ -90,6 +87,7 @@ namespace GetXeroCustomer
                 objResultPT.TransactionStatus = ResponseStatus.Error;
                 objResultPT.ResultMsg = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
             }
+
             return new OkObjectResult(objResultPT);
         }
     }
