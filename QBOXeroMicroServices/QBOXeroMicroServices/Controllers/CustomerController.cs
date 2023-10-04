@@ -11,6 +11,7 @@ namespace QBOXeroMicroServices.Controllers
     [ApiController]
     public class CustomerController : ControllerBase
     {
+        #region QuickBooks api
         [HttpPost]
         [Route("/GetQBOCustomer")]
         public async Task<IActionResult> GetQBOCustomer([FromBody] QBOCustomerReqViewModel model)
@@ -134,7 +135,9 @@ namespace QBOXeroMicroServices.Controllers
             }
             return Ok(objResponse);
         }
+        #endregion
 
+        #region Xero api
         [HttpPost]
         [Route("/GetXeroCustomer")]
         public async Task<IActionResult> GetXeroCustomer([FromBody] XeroReqViewModel model)
@@ -263,5 +266,6 @@ namespace QBOXeroMicroServices.Controllers
             }
             return Ok(objResponse);
         }
+        #endregion
     }
 }

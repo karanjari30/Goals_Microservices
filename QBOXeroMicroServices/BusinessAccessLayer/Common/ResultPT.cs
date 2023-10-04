@@ -35,4 +35,8 @@ namespace BusinessAccessLayer.Common
     {
         public List<Xero.NetStandard.OAuth2.Model.Accounting.Invoice> ReturnObject { get; set; }
     }
+    public class XeroPaymentSyncResult : DownloadResultPT
+    {
+        public List<Xero.NetStandard.OAuth2.Model.Accounting.Payment> ReturnObject { get; set; }
+    }
 }

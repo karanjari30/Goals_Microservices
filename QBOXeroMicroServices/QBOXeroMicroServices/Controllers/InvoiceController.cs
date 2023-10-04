@@ -11,6 +11,7 @@ namespace QBOXeroMicroServices.Controllers
     [ApiController]
     public class InvoiceController : ControllerBase
     {
+        #region QuickBooks api
         [HttpPost]
         [Route("/GetQBOInvoice")]
         public async Task<IActionResult> GetQBOInvoice([FromBody] QBOInvoiceReqViewModel model)
@@ -134,7 +135,9 @@ namespace QBOXeroMicroServices.Controllers
             }
             return Ok(objResponse);
         }
+        #endregion
 
+        #region Xero api
         [HttpPost]
         [Route("/GetXeroInvoice")]
         public async Task<IActionResult> GetXeroInvoice([FromBody] XeroReqViewModel model)
@@ -258,5 +261,6 @@ namespace QBOXeroMicroServices.Controllers
             }
             return Ok(objResponse);
         }
+        #endregion
     }
 }

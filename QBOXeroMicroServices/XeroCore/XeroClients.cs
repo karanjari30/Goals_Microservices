@@ -92,7 +92,7 @@ namespace XeroCore
                     bool isContinue = true;
                     do
                     {
-                        var checkPageCount = await xeroAPI.GetInvoicesAsync(accessToken, tenantId, objRequestModel.Data.LastModifiedDate, objRequestModel.Data.Where, objRequestModel.Data.OrderBy, 
+                        var checkPageCount = await xeroAPI.GetInvoicesAsync(accessToken, tenantId, objRequestModel.Data.LastModifiedDate, objRequestModel.Data.Where, objRequestModel.Data.OrderBy,
                             null, null, objRequestModel.Data.ContactIDs, null, objRequestModel.Data.Page, objRequestModel.Data.IncludeArchived, objRequestModel.Data.SummaryOnly);
                         if (checkPageCount != null && checkPageCount._Invoices != null && checkPageCount._Invoices.Any())
                         {
@@ -150,6 +150,82 @@ namespace XeroCore
                 return null;
             }
             return objInvoice._Invoices.FirstOrDefault();
+        }
+        #endregion
+
+        #region Payment
+        public async Task<List<Payment>> GetPaymentsData(XeroReqViewModel objRequestModel, string accessToken, string tenantId)
+        {
+            var xeroAPI = new AccountingApi();
+            try
+            {
+                List<Payment> paymentList = new List<Payment>();
+                if (objRequestModel != null && objRequestModel.Data != null)
+                {
+                    int count = 0;
+                    bool isContinue = true;
+                    do
+                    {
+                        var checkPageCount = await xeroAPI.GetPaymentsAsync(accessToken, tenantId, objRequestModel.Data.LastModifiedDate, objRequestModel.Data.Where, objRequestModel.Data.OrderBy, objRequestModel.Data.Page);
+                        if (checkPageCount != null && checkPageCount._Payments != null && checkPageCount._Payments.Any())
+                        {
+                            paymentList.AddRange(checkPageCount._Payments);
+                            count = checkPageCount._Payments.Count;
+                            if (count < 100)
+                            {
+                                isContinue = false;
+                            }
+                        }
+                        else
+                        {
+                            isContinue = false;
+                        }
+                    } while (isContinue);
+                }
+                else
+                {
+                    var objPayments = await xeroAPI.GetPaymentsAsync(accessToken, tenantId);
+                    paymentList = objPayments._Payments;
+                }
+
+                return paymentList;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<List<Payment>> CreateUpdatePayment(Payment payment, string tenantId, string accessToken)
+        {
+            var xeroAPI = new AccountingApi();
+            var payments = new Payments();
+            var paymentsList = new List<Payment>();
+            paymentsList.Add(payment);
+            payments._Payments = paymentsList;
+
+            var objPayment = await xeroAPI.CreatePaymentsAsync(accessToken, tenantId, payments);
+
+            return objPayment._Payments;
+        }
+
+        public async Task<Payment> DeletePaymentById(string paymentId, string tenantId, string accessToken)
+        {
+            var xeroAPI = new AccountingApi();
+
+            var objPayment = await xeroAPI.GetPaymentAsync(accessToken, tenantId, new Guid(paymentId));
+            if (objPayment != null)
+            {
+                var paymentDelete = new PaymentDelete();
+                paymentDelete.Status = Payment.StatusEnum.DELETED.ToString();
+
+                await xeroAPI.DeletePaymentAsync(accessToken, tenantId, new Guid(paymentId), paymentDelete);
+            }
+            else
+            {
+                return null;
+            }
+            return objPayment._Payments.FirstOrDefault();
         }
         #endregion
     }
